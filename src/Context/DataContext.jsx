@@ -32,7 +32,7 @@ export const DataProvider = ({ children }) => {
     let newVal = data?.map((curElem) => {
       return curElem[property];
     });
-    newVal = [ ...new Set(newVal)];
+    newVal = [ "All",...new Set(newVal)];
     return newVal;
   };
   const categoryOnlyData = getUniqueCategory(data, "category");

@@ -11,15 +11,15 @@ const ProductListView = ({ product }) => {
         <img
           src={product.thumbnail}
           alt={product.title}
-          className="h-60 w-60 rounded-lg cursor-pointer bg-white ml-4"
+          className="md:h-60 h-25 md:w-60 w-25 rounded-lg cursor-pointer bg-white ml-4"
           onClick={() => navigate(`/products/${product.id}`)}
         />
         <div className="space-y-2">
-          <h1 className="font-bold text-xl line-clamp-3 hover:text-red-400 w-full">
+          <h1 className="font-bold md:text-xl text-lg line-clamp-3 hover:text-red-400 w-full">
             {product.title}
           </h1>
-          <p className="font-semibold flex items-center text-lg">
-            <span className="text-4xl">{product.price}</span>({product.discount}
+          <p className="font-semibold flex items-center md:text-lg text-md">
+            <span className="md:text-4xl text-xl">${product.price}</span>({product.discount}
             5% off)
           </p>
           <p>

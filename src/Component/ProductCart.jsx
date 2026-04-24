@@ -22,7 +22,7 @@ const ProductCart = ({ product }) => {
       <p className="my-1 text-lg text-gray-800 font-bold">${product.price}</p>
       <button
         onClick={() => addToCart(product)}
-        className="bg-red-500 px-3 py-2 text-lg rounded-md text-white w-full cursor-pointer flex gap-3 items-center justify-center font-semibold"
+        className="bg-red-500 px-3 py-2 text-lg rounded-md text-white w-full cursor-pointer flex md:gap-3 items-center justify-center font-semibold"
       >
         {" "}
         <IoCarOutline className="w-6 h-6" />

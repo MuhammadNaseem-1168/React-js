@@ -12,10 +12,13 @@ import axios from "axios";
 import Footer from "./Component/Footer";
 import SingleProduct from "./Pages/SingleProduct";
 import CategoryProduct from "./Pages/CategoryProduct";
+import ProtectedRoute from "./Component/ProtectedRoute";
+import { useCart } from "./Context/CartContext";
 
 const App = () => {
   const [location, setLocation] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const { cartItem, setCartItem } = useCart();
 
   // Detect location
   const getLocation = async () => {
@@ -50,6 +53,20 @@ const App = () => {
     getLocation();
   }, []);
 
+  //Load cart from local storage on initial render
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cartItem");
+    if (storedCart) {
+      setCartItem(JSON.parse(storedCart));
+    }
+  }, []);
+
+  //Save cart to local storage whenever it changes
+  useEffect(() => {
+    if (cartItem.length > 0) {
+      localStorage.setItem("cartItem", JSON.stringify(cartItem));
+    }
+  }, [cartItem]);
   return (
     <BrowserRouter>
       <Navbar
@@ -62,10 +79,17 @@ const App = () => {
         <Route path="/" element={<Home />}></Route>
         <Route path="/products" element={<Products />}></Route>
         <Route path="/products/:id" element={<SingleProduct />}></Route>
-        <Route path="/category/:category" element={<CategoryProduct/>}></Route>
+        <Route path="/category/:category" element={<CategoryProduct />}></Route>
         <Route path="/about" element={<About />}></Route>
         <Route path="/contact" element={<Contact />}></Route>
-      <Route path="/cart" element={<Cart  location={location} getLocation={getLocation} />}></Route>
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart location={location} getLocation={getLocation} />
+            </ProtectedRoute>
+          }
+        ></Route>
       </Routes>
       <Footer />
     </BrowserRouter>

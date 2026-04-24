@@ -43,14 +43,16 @@ const Carousel = () => {
       </button>
 
       {/* CARD */}
-      <div className="bg-white p-4 rounded shadow text-center w-full h-full">
+      <div className="bg-white  md:p-4 rounded shadow text-center w-full h-full">
         <img
           src={data[index].thumbnail}
           alt=""
           className="h-38 mx-auto object-contain"
         />
 
-        <h2 className="font-bold mt-2 text-lg">{data[index].title}</h2>
+        <h2 className="font-bold mt-2 text-lg max-w-[200px] mx-auto text-center sm:max-w-none ">
+          {data[index].title}
+        </h2>
 
         {/* 💰 PRICE */}
         <p className="text-green-600 font-semibold">${data[index].price}</p>

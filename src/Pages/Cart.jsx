@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCart } from "../Context/CartContext";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { LucideNotebook } from "lucide-react";
@@ -12,13 +12,52 @@ const Cart = ({ location, getLocation }) => {
   const { cartItem, updateQuantity, deleteItem } = useCart();
   const { user } = useUser();
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    address: "",
+    state: "",
+    postcode: "",
+    country: "",
+    phone: "",
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+ const handleSubmit = () => {
+  if (!user) {
+    alert("Please login first");
+    return;
+  }
+
+  const key = `userInfo_${user.id}`;
+  localStorage.setItem(key, JSON.stringify(formData));
+
+  alert("Details saved successfully ✅");
+};
+
+  useEffect(() => {
+    if (!user) return;
+
+    const key = `userInfo_${user.id}`;
+    const storedData = localStorage.getItem(key);
+
+    if (storedData) {
+      setFormData(JSON.parse(storedData));
+    }
+  }, [user]);
 
   const totalPrice = cartItem.reduce((total, item) => total + item.price, 0);
   return (
     <div className="mt-10 max-w-6xl mx-auto mb-5">
       {cartItem.length > 0 ? (
         <div>
-          <h1 className="font-bold text-2xl">My Cart({cartItem.length})</h1>
+          <h1 className="font-bold px-4 text-2xl">
+            My Cart({cartItem.length})
+          </h1>
           <div>
             <div className="mt-10">
               {cartItem.map((item, index) => {
@@ -34,7 +73,9 @@ const Cart = ({ location, getLocation }) => {
                         className="w-20 h-20 rounded-md"
                       />
                       <div>
-                        <h1 className="w-[300px] line-clamp-2">{item.title}</h1>
+                        <h1 className="md:w-[300px] line-clamp-2">
+                          {item.title}
+                        </h1>
                         <p className="text-red-500 font-semibold text-lg">
                           ${item.price}
                         </p>
@@ -70,7 +111,7 @@ const Cart = ({ location, getLocation }) => {
               })}
             </div>
             {/* Delivery Info cart */}
-            <div className="grid grid-cols-2 gap-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 md:gap-20">
               <div className="bg-gray-100 rounded-md p-7 mt-4 space-y-2">
                 <h1 className="text-gray-800 font-bold text-xl">
                   Delivery Info
@@ -88,6 +129,9 @@ const Cart = ({ location, getLocation }) => {
                   <label htmlFor="">Address</label>
                   <input
                     type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
                     // value={location.county}
                     placeholder="Enter Your Address"
                     className="p-2 rounded-md bg-white"
@@ -97,7 +141,10 @@ const Cart = ({ location, getLocation }) => {
                   <div className="flex flex-col space-y-1 w-full">
                     <label htmlFor="">State</label>
                     <input
-                      type="character"
+                      type="text"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleChange}
                       // value={location.state}
                       placeholder="Enter your state"
                       className="p-2 rounded-md w-full bg-white"
@@ -107,6 +154,9 @@ const Cart = ({ location, getLocation }) => {
                     <label htmlFor="">PostCode</label>
                     <input
                       type="number"
+                      name="postcode"
+                      value={formData.postcode}
+                      onChange={handleChange}
                       // value={location.postcode}
                       placeholder="Enter your PostCode"
                       className="p-2 rounded-md w-full bg-white"
@@ -118,6 +168,9 @@ const Cart = ({ location, getLocation }) => {
                     <label htmlFor="">Country</label>
                     <input
                       type="character"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleChange}
                       // value={location.country}
                       placeholder="Enter your Country"
                       className="p-2 rounded-md w-full bg-white"
@@ -127,12 +180,18 @@ const Cart = ({ location, getLocation }) => {
                     <label htmlFor="">Phone No</label>
                     <input
                       type="number"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
                       placeholder="Enter your Phone No"
                       className="p-2 rounded-md w-full bg-white"
                     />
                   </div>
                 </div>
-                <button className="bg-red-500 text-white px-3 py-1 rounded-md mt-3 cursor-pointer hover:bg-red-800">
+                <button
+                  onClick={handleSubmit}
+                  className="bg-red-500 text-white px-3 py-1 rounded-md mt-3 cursor-pointer hover:bg-red-800"
+                >
                   Submit
                 </button>
                 <div className="flex items-center justify-center w-full text-gray-700">
